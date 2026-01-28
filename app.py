@@ -387,10 +387,15 @@ def scrape_google_serp_playwright(keyword, country_code="es", delay_min=4, delay
         "error": None
     }
     
+    # En producción siempre headless, en local según variable de entorno
+    import os
+    is_production = os.environ.get("FLASK_ENV") == "production"
+    use_headless = is_production or os.environ.get("HEADLESS", "true").lower() == "true"
+    
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch(
-                headless=False,
+                headless=use_headless,
                 args=[
                     "--disable-blink-features=AutomationControlled",
                     "--disable-dev-shm-usage",
@@ -720,8 +725,16 @@ def export_xlsx():
 
 
 if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    is_production = os.environ.get("FLASK_ENV") == "production"
+    
     print("\n" + "="*60)
     print("  SERP Analyzer - Versión Playwright v2")
-    print("  Abre http://localhost:5000 en tu navegador")
+    if is_production:
+        print(f"  Modo producción - Puerto {port}")
+    else:
+        print("  Abre http://localhost:5000 en tu navegador")
     print("="*60 + "\n")
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    
+    app.run(debug=not is_production, host="0.0.0.0", port=port)

@@ -7,681 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-primary: #0a0a0b;
-            --bg-secondary: #111113;
-            --bg-tertiary: #18181b;
-            --bg-card: #1c1c1f;
-            --border-color: #27272a;
-            --border-hover: #3f3f46;
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --accent-primary: #10b981;
-            --accent-secondary: #059669;
-            --accent-glow: rgba(16, 185, 129, 0.15);
-            --warning: #f59e0b;
-            --error: #ef4444;
-            --info: #3b82f6;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        .header {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1.25rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .logo-text {
-            font-weight: 600;
-            font-size: 1.25rem;
-            letter-spacing: -0.02em;
-        }
-
-        .logo-text span { color: var(--accent-primary); }
-
-        .header-badge {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            background: var(--bg-tertiary);
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-        }
-
-        .main-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: 380px 1fr;
-            gap: 2rem;
-            min-height: calc(100vh - 80px);
-        }
-
-        .input-panel {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-        }
-
-        .panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .panel-header {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .panel-header h2 {
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-        }
-
-        .panel-body { padding: 1.25rem; }
-
-        .form-group { margin-bottom: 1.25rem; }
-        .form-group:last-child { margin-bottom: 0; }
-
-        label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .label-hint {
-            font-weight: 400;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        textarea, select {
-            width: 100%;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 0.875rem;
-            color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        textarea {
-            min-height: 180px;
-            resize: vertical;
-        }
-
-        select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a1a1aa' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.875rem center;
-            padding-right: 2.5rem;
-        }
-
-        textarea:focus, select:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        .input-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        input[type="number"] {
-            width: 100%;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 0.75rem;
-            color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        input[type="number"]:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.875rem 1.5rem;
-            border-radius: 8px;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            width: 100%;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-            box-shadow: 0 4px 12px var(--accent-glow);
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px var(--accent-glow);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-            border-color: var(--border-hover);
-            background: var(--bg-secondary);
-        }
-
-        .btn-secondary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-icon {
-            width: 18px;
-            height: 18px;
-        }
-
-        .progress-container {
-            margin-top: 1.25rem;
-            display: none;
-        }
-
-        .progress-container.active { display: block; }
-
-        .progress-bar {
-            height: 4px;
-            background: var(--bg-secondary);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-bottom: 0.75rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 2px;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-
-        .progress-text {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .results-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            background: var(--bg-card);
-            padding: 0.5rem;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-        }
-
-        .tab {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            background: transparent;
-            border: none;
-            border-radius: 6px;
-            color: var(--text-secondary);
-            font-family: 'Outfit', sans-serif;
-            font-weight: 500;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .tab:hover { color: var(--text-primary); background: var(--bg-tertiary); }
-        .tab.active { background: var(--bg-tertiary); color: var(--text-primary); }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 1.25rem;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: -0.02em;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
-        }
-
-        .stat-card.accent .stat-value { color: var(--accent-primary); }
-
-        .table-container {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .table-header {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .table-header h3 { font-size: 1rem; font-weight: 600; }
-
-        .table-scroll { overflow-x: auto; }
-
-        table { width: 100%; border-collapse: collapse; }
-
-        th {
-            text-align: left;
-            padding: 0.875rem 1.25rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            background: var(--bg-tertiary);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        td {
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
-
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: var(--bg-tertiary); }
-
-        .domain-name {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 500;
-            color: var(--accent-primary);
-        }
-
-        .position-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 32px;
-            padding: 0.25rem 0.5rem;
-            background: var(--bg-secondary);
-            border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .keywords-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.35rem;
-        }
-
-        .keyword-tag {
-            font-size: 0.75rem;
-            padding: 0.2rem 0.5rem;
-            background: var(--bg-secondary);
-            border-radius: 4px;
-            color: var(--text-secondary);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* Accordion para keywords */
-        .keyword-accordion {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .keyword-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .keyword-card-header {
-            padding: 1rem 1.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .keyword-card-header:hover {
-            background: var(--bg-tertiary);
-        }
-
-        .keyword-header-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .keyword-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .keyword-tag-badge {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.6rem;
-            background: var(--info);
-            border-radius: 20px;
-            color: white;
-            font-weight: 500;
-        }
-
-        .keyword-header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .results-count {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .chevron {
-            width: 20px;
-            height: 20px;
-            color: var(--text-muted);
-            transition: transform 0.3s;
-        }
-
-        .keyword-card.open .chevron {
-            transform: rotate(180deg);
-        }
-
-        .keyword-card-body {
-            display: none;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .keyword-card.open .keyword-card-body {
-            display: block;
-        }
-
-        /* Features section */
-        .features-section {
-            padding: 1rem 1.25rem;
-            background: var(--bg-tertiary);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .features-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .feature-badge {
-            font-size: 0.7rem;
-            padding: 0.35rem 0.65rem;
-            border-radius: 4px;
-            font-weight: 500;
-        }
-
-        .feature-badge.active {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-primary);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .feature-badge.inactive {
-            background: var(--bg-secondary);
-            color: var(--text-muted);
-            border: 1px solid var(--border-color);
-        }
-
-        /* Resultados orgánicos */
-        .organic-list {
-            padding: 0.75rem;
-        }
-
-        .organic-item {
-            display: grid;
-            grid-template-columns: 50px 1fr;
-            gap: 1rem;
-            padding: 1rem;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .organic-item:hover {
-            background: var(--bg-tertiary);
-        }
-
-        .organic-position {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-secondary);
-            border-radius: 10px;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-        }
-
-        .organic-position.top-3 {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: white;
-        }
-
-        .organic-content {
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-            min-width: 0;
-        }
-
-        .organic-title {
-            font-weight: 500;
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-
-        .organic-domain {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--accent-primary);
-            font-weight: 500;
-        }
-
-        .organic-url {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .organic-url a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .organic-url a:hover {
-            color: var(--accent-primary);
-            text-decoration: underline;
-        }
-
-        .error-message {
-            padding: 1rem 1.25rem;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 8px;
-            color: var(--error);
-            font-size: 0.9rem;
-            margin: 1rem;
-        }
-
-        .empty-state {
-            padding: 4rem 2rem;
-            text-align: center;
-            color: var(--text-muted);
-        }
-
-        .empty-state-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 1.5rem;
-            background: var(--bg-tertiary);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .empty-state-icon svg {
-            width: 32px;
-            height: 32px;
-            stroke: var(--text-muted);
-        }
-
-        .empty-state h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .spinner {
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 1200px) {
-            .main-container { grid-template-columns: 1fr; }
-            .input-panel { position: static; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 600px) {
-            .main-container { padding: 1rem; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .input-row { grid-template-columns: 1fr; }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <header class="header">
@@ -690,7 +16,17 @@
                 <div class="logo-icon">S</div>
                 <div class="logo-text">SERP<span>Analyzer</span></div>
             </div>
-            <div class="header-badge">Playwright v2.0</div>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div class="header-badge">Playwright v3.0 · España</div>
+                <button class="btn-info" id="info-btn" onclick="openInfoModal()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    Ayuda
+                </button>
+            </div>
         </div>
     </header>
 
@@ -708,31 +44,12 @@
                     <div class="form-group">
                         <label>
                             Keywords
-                            <span class="label-hint">(una por línea, formato: keyword | tag)</span>
+                            <span class="label-hint">(una por línea)</span>
                         </label>
-                        <textarea 
-                            id="keywords-input" 
-                            placeholder="comprar zapatillas running | transaccional&#10;mejores zapatillas 2024 | informacional&#10;zapatillas baratas"
+                        <textarea
+                            id="keywords-input"
+                            placeholder="comprar zapatillas running&#10;mejores zapatillas 2024&#10;nike españa tienda"
                         ></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>País</label>
-                        <select id="country-select">
-                            <option value="es">🇪🇸 España</option>
-                            <option value="mx">🇲🇽 México</option>
-                            <option value="ar">🇦🇷 Argentina</option>
-                            <option value="co">🇨🇴 Colombia</option>
-                            <option value="cl">🇨🇱 Chile</option>
-                            <option value="pe">🇵🇪 Perú</option>
-                            <option value="us">🇺🇸 Estados Unidos</option>
-                            <option value="uk">🇬🇧 Reino Unido</option>
-                            <option value="de">🇩🇪 Alemania</option>
-                            <option value="fr">🇫🇷 Francia</option>
-                            <option value="it">🇮🇹 Italia</option>
-                            <option value="pt">🇵🇹 Portugal</option>
-                            <option value="br">🇧🇷 Brasil</option>
-                        </select>
                     </div>
 
                     <div class="form-group">
@@ -781,22 +98,24 @@
 
         <section class="results-panel">
             <div class="tabs" id="tabs-container" style="display: none;">
-                <button class="tab active" data-tab="domains">Dominios agregados</button>
-                <button class="tab" data-tab="keywords">Resultados por keyword</button>
+                <button class="tab active" data-tab="domains">Dominios orgánicos</button>
+                <button class="tab" data-tab="keywords">Keywords orgánico</button>
+                <button class="tab ai-tab" data-tab="ai-domains">Dominios IA</button>
+                <button class="tab ai-tab" data-tab="ai-keywords">IA por keyword</button>
             </div>
 
             <div class="stats-grid" id="stats-container" style="display: none;">
                 <div class="stat-card accent">
                     <div class="stat-value" id="stat-domains">0</div>
-                    <div class="stat-label">Dominios únicos</div>
+                    <div class="stat-label">Dominios orgánicos</div>
+                </div>
+                <div class="stat-card ai-accent">
+                    <div class="stat-value" id="stat-ai-domains">0</div>
+                    <div class="stat-label">Dominios en IA</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="stat-keywords">0</div>
                     <div class="stat-label">Keywords analizadas</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="stat-results">0</div>
-                    <div class="stat-label">Resultados orgánicos</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="stat-errors">0</div>
@@ -804,10 +123,11 @@
                 </div>
             </div>
 
+            <!-- Tab 1: Dominios orgánicos -->
             <div class="tab-content active" id="tab-domains">
                 <div class="table-container" id="domains-table-container" style="display: none;">
                     <div class="table-header">
-                        <h3>Dominios por frecuencia de aparición</h3>
+                        <h3>Dominios por frecuencia de aparición (orgánico)</h3>
                     </div>
                     <div class="table-scroll">
                         <table>
@@ -825,7 +145,6 @@
                         </table>
                     </div>
                 </div>
-
                 <div class="empty-state" id="empty-state-domains">
                     <div class="empty-state-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -839,17 +158,257 @@
                 </div>
             </div>
 
+            <!-- Tab 2: Keywords orgánico -->
             <div class="tab-content" id="tab-keywords">
                 <div class="keyword-accordion" id="keyword-accordion"></div>
             </div>
+
+            <!-- Tab 3: Dominios IA -->
+            <div class="tab-content" id="tab-ai-domains">
+                <div class="table-container ai-table" id="ai-domains-table-container" style="display: none;">
+                    <div class="table-header ai-header">
+                        <h3 class="ai-label">Dominios citados en AI Overview</h3>
+                    </div>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Dominio</th>
+                                    <th>Apariciones</th>
+                                    <th>Posición media IA</th>
+                                    <th>URLs únicas</th>
+                                    <th>Keywords</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ai-domains-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="empty-state" id="empty-state-ai-domains">
+                    <div class="empty-state-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"></path>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <h3>Sin datos de AI Overview</h3>
+                    <p>No se detectaron fuentes en AI Overview para las keywords analizadas</p>
+                </div>
+            </div>
+
+            <!-- Tab 4: IA por keyword -->
+            <div class="tab-content" id="tab-ai-keywords">
+                <div class="keyword-accordion" id="ai-keyword-accordion"></div>
+                <div class="empty-state" id="empty-state-ai-keywords" style="display: none;">
+                    <div class="empty-state-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"></path>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <h3>Sin datos de AI Overview</h3>
+                    <p>No se detectaron fuentes en AI Overview para las keywords analizadas</p>
+                </div>
+            </div>
         </section>
     </main>
+
+    <!-- ════════════════════════ MODAL DE AYUDA ════════════════════════ -->
+    <div class="modal-overlay" id="info-modal" onclick="handleModalClick(event)">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="Información de uso">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <h2>Cómo usar SERP Analyzer</h2>
+                </div>
+                <button class="modal-close" onclick="closeInfoModal()" aria-label="Cerrar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- Qué hace -->
+                <div class="info-section">
+                    <h3>¿Qué hace esta herramienta?</h3>
+                    <p class="info-text">
+                        SERP Analyzer rastrea Google España con un navegador real (Playwright + Chromium) para analizar
+                        las páginas de resultados de las keywords que introduzcas. A diferencia de las APIs de SEO,
+                        captura lo que un usuario real ve: resultados orgánicos, elementos especiales de la SERP
+                        y las fuentes citadas en el bloque de <strong>AI Overview</strong>.
+                    </p>
+                    <p class="info-text" style="margin-top:0.5rem;">
+                        Todos los resultados se pueden exportar a un fichero Excel con cuatro hojas: dominios orgánicos
+                        agregados, resultados por keyword, dominios de AI Overview y fuentes AIO por keyword.
+                    </p>
+                </div>
+
+                <!-- Datos que recoge -->
+                <div class="info-section">
+                    <h3>Datos recopilados</h3>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-title"><span class="info-card-dot"></span>Resultados orgánicos</div>
+                            <p>Posición, título, dominio y URL de cada resultado, hasta las primeras 10 posiciones.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-title"><span class="info-card-dot ai"></span>AI Overview (AIO)</div>
+                            <p>Fuentes citadas por el bloque de IA de Google: dominio, URL y posición dentro del AIO.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-title"><span class="info-card-dot warn"></span>Elementos SERP</div>
+                            <p>Detección de: Ads, Featured Snippet, PAA, Imágenes, Vídeos, Local Pack, Shopping, Knowledge Panel y Noticias.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-title"><span class="info-card-dot purple"></span>Intención automática</div>
+                            <p>Clasificación automática de cada keyword según los elementos SERP detectados: transaccional, informacional, branding o mixto.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Intención de búsqueda -->
+                <div class="info-section">
+                    <h3>Clasificación de intención</h3>
+                    <p class="info-text" style="margin-bottom:0.875rem;">
+                        La intención se asigna automáticamente analizando qué elementos aparecen en la SERP. No requiere configuración manual.
+                    </p>
+                    <div class="intent-row">
+                        <div class="intent-line">
+                            <span class="intent-badge transaccional">transaccional</span>
+                            <span>La SERP contiene Ads o Shopping. Señal de intención de compra o comparación de productos.</span>
+                        </div>
+                        <div class="intent-line">
+                            <span class="intent-badge informacional">informacional</span>
+                            <span>Predominan Featured Snippet, PAA, AI Overview, Vídeos o Noticias. Búsqueda de información.</span>
+                        </div>
+                        <div class="intent-line">
+                            <span class="intent-badge branding">branding</span>
+                            <span>Aparece un Knowledge Panel sin señales transaccionales claras. Búsqueda de marca o entidad.</span>
+                        </div>
+                        <div class="intent-line">
+                            <span class="intent-badge mixto">mixto</span>
+                            <span>Coexisten señales transaccionales e informacionales, o no hay suficientes datos para clasificar.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delays y tiempos -->
+                <div class="info-section">
+                    <h3>Delays y tiempos de análisis</h3>
+                    <p class="info-text" style="margin-bottom:0.875rem;">
+                        El delay es la pausa entre petición y petición. Google detecta patrones automatizados y puede
+                        servir un CAPTCHA si las peticiones llegan demasiado seguidas o con un patrón regular.
+                        Por eso el delay es <strong>aleatorio</strong> dentro del rango que configures.
+                    </p>
+
+                    <div class="delay-wrap" style="margin-bottom:1rem;">
+                        <table class="delay-table">
+                            <thead>
+                                <tr>
+                                    <th>Rango</th>
+                                    <th>Tiempo estimado para 10 keywords</th>
+                                    <th>Valoración</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="mono">2 – 3 s</span></td>
+                                    <td>~25 segundos</td>
+                                    <td class="bad">Alto riesgo de CAPTCHA</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="mono">3 – 5 s</span></td>
+                                    <td>~40 segundos</td>
+                                    <td class="rec">Aceptable en sesiones cortas</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="mono">5 – 8 s</span> <small style="color:var(--accent-primary)">★ defecto</small></td>
+                                    <td>~65 segundos</td>
+                                    <td class="good">Equilibrio seguridad / velocidad</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="mono">8 – 12 s</span></td>
+                                    <td>~100 segundos</td>
+                                    <td class="good">Más seguro para lotes grandes</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="mono">12 – 20 s</span></td>
+                                    <td>~160 segundos</td>
+                                    <td class="good">Muy seguro, mínimo riesgo</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="callout warn" style="margin-bottom:0.75rem;">
+                        <strong>Tiempo real por keyword:</strong> Al delay se le suman ~3–5 segundos de carga de página
+                        y otros ~3 segundos de espera para que el bloque de AI Overview termine de renderizarse.
+                        Para AIO con botones de expansión, se añaden ~2 segundos extra por grupo.
+                        Con el delay predeterminado de 5–8 s, calcula entre <strong>10–15 segundos por keyword</strong>.
+                    </div>
+
+                    <div class="callout">
+                        <strong>Consejo para lotes grandes (&gt;30 keywords):</strong> Usa un delay de 8–15 s y
+                        divide en sesiones de no más de 50 keywords. La herramienta reutiliza la misma sesión
+                        de navegador y cookies entre keywords, lo que reduce mucho el riesgo de detección.
+                    </div>
+                </div>
+
+                <!-- Cómo funciona -->
+                <div class="info-section">
+                    <h3>Funcionamiento interno</h3>
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-title"><span class="info-card-dot"></span>Sesión única de navegador</div>
+                            <p>Se abre un solo Chromium para todas las keywords. Las cookies y el estado de sesión se guardan en <code style="font-size:0.78rem;color:var(--accent-primary)">browser_state.json</code> y se reutilizan en la siguiente ejecución.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-title"><span class="info-card-dot"></span>Medidas anti-detección</div>
+                            <p>Se enmascara el flag <code style="font-size:0.78rem;">navigator.webdriver</code>, se añaden plugins de navegador simulados y se usa un User-Agent de Chrome 131 para Android.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-title"><span class="info-card-dot ai"></span>Extracción de AI Overview</div>
+                            <p>Los datos AIO de Google se almacenan en comentarios HTML codificados (<code style="font-size:0.78rem;">TgQPHd|[...]</code>). La herramienta los extrae con regex directamente sobre el HTML serializado.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-title"><span class="info-card-dot ai"></span>Expansión de citas AIO</div>
+                            <p>Si el AIO muestra "Wikipedia (+3)", se hace clic en los botones de expansión para cargar las fuentes adicionales antes de leer el HTML.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Limitaciones -->
+                <div class="info-section">
+                    <h3>Limitaciones conocidas</h3>
+                    <div class="callout warn">
+                        <strong>CAPTCHA:</strong> Si Google detecta el patrón de peticiones, puede mostrar un CAPTCHA.
+                        El navegador se abre en modo visible (no headless) para que puedas resolverlo manualmente
+                        si ocurre. Aumentar el delay reduce la probabilidad.<br><br>
+                        <strong>AI Overview variable:</strong> Google no muestra AIO para todas las búsquedas ni
+                        para todos los usuarios. Si una keyword no tiene datos AIO, es posible que en ese momento
+                        Google no lo estuviera mostrando para esa consulta.
+                    </div>
+                </div>
+
+            </div><!-- /modal-body -->
+        </div>
+    </div>
+    <!-- ════════════════════════════════════════════════════════════════ -->
 
     <script>
         let analysisData = null;
 
         const keywordsInput = document.getElementById('keywords-input');
-        const countrySelect = document.getElementById('country-select');
         const delayMinInput = document.getElementById('delay-min');
         const delayMaxInput = document.getElementById('delay-max');
         const analyzeBtn = document.getElementById('analyze-btn');
@@ -859,10 +418,6 @@
         const progressText = document.getElementById('progress-text');
         const tabsContainer = document.getElementById('tabs-container');
         const statsContainer = document.getElementById('stats-container');
-        const domainsTableContainer = document.getElementById('domains-table-container');
-        const domainsTableBody = document.getElementById('domains-table-body');
-        const emptyStateDomains = document.getElementById('empty-state-domains');
-        const keywordAccordion = document.getElementById('keyword-accordion');
 
         // Tabs
         document.querySelectorAll('.tab').forEach(tab => {
@@ -877,12 +432,8 @@
         // Analizar
         analyzeBtn.addEventListener('click', async () => {
             const keywords = keywordsInput.value.trim();
-            if (!keywords) {
-                alert('Introduce al menos una keyword');
-                return;
-            }
+            if (!keywords) { alert('Introduce al menos una keyword'); return; }
 
-            const country = countrySelect.value;
             const delayMin = parseInt(delayMinInput.value) || 5;
             const delayMax = parseInt(delayMaxInput.value) || 8;
 
@@ -906,12 +457,7 @@
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        keywords: keywords,
-                        country: country,
-                        delay_min: delayMin,
-                        delay_max: delayMax
-                    })
+                    body: JSON.stringify({ keywords, delay_min: delayMin, delay_max: delayMax })
                 });
 
                 const data = await response.json();
@@ -940,16 +486,12 @@
                 </svg>
                 Analizar SERPs
             `;
-
-            setTimeout(() => {
-                progressContainer.classList.remove('active');
-            }, 3000);
+            setTimeout(() => progressContainer.classList.remove('active'), 3000);
         });
 
         // Exportar XLSX
         exportBtn.addEventListener('click', async () => {
             if (!analysisData) return;
-
             exportBtn.disabled = true;
             exportBtn.innerHTML = '<div class="spinner"></div> Exportando...';
 
@@ -964,7 +506,7 @@
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `serp_analysis_${new Date().toISOString().slice(0,10)}.xlsx`;
+                a.download = `serp_analysis_${new Date().toISOString().slice(0, 10)}.xlsx`;
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
@@ -984,22 +526,36 @@
             `;
         });
 
-        // Renderizar resultados
+        function intentBadge(tag) {
+            if (!tag) return '';
+            return `<span class="intent-badge ${escapeHtml(tag)}">${escapeHtml(tag)}</span>`;
+        }
+
         function renderResults(data) {
             tabsContainer.style.display = 'flex';
             statsContainer.style.display = 'grid';
 
             document.getElementById('stat-domains').textContent = data.domain_aggregation.length;
+            document.getElementById('stat-ai-domains').textContent = data.ai_domain_aggregation.length;
             document.getElementById('stat-keywords').textContent = data.total_keywords;
-            document.getElementById('stat-results').textContent = data.results.reduce((acc, r) => acc + (r.organic_results?.length || 0), 0);
             document.getElementById('stat-errors').textContent = data.keywords_with_errors;
 
-            // Tabla de dominios
-            if (data.domain_aggregation.length > 0) {
-                emptyStateDomains.style.display = 'none';
-                domainsTableContainer.style.display = 'block';
+            renderOrganicDomains(data.domain_aggregation);
+            renderKeywordAccordion(data.results);
+            renderAiDomains(data.ai_domain_aggregation);
+            renderAiKeywordAccordion(data.results);
+        }
 
-                domainsTableBody.innerHTML = data.domain_aggregation.map((domain, index) => `
+        // --- Organic domains table ---
+        function renderOrganicDomains(domainAggregation) {
+            const container = document.getElementById('domains-table-container');
+            const emptyState = document.getElementById('empty-state-domains');
+            const tbody = document.getElementById('domains-table-body');
+
+            if (domainAggregation.length > 0) {
+                emptyState.style.display = 'none';
+                container.style.display = 'block';
+                tbody.innerHTML = domainAggregation.map((domain, index) => `
                     <tr>
                         <td><span class="position-badge">${index + 1}</span></td>
                         <td><span class="domain-name">${escapeHtml(domain.domain)}</span></td>
@@ -1015,35 +571,37 @@
                     </tr>
                 `).join('');
             } else {
-                emptyStateDomains.style.display = 'block';
-                domainsTableContainer.style.display = 'none';
+                emptyState.style.display = 'block';
+                container.style.display = 'none';
             }
+        }
 
-            // Accordion de keywords
-            keywordAccordion.innerHTML = data.results.map((result, idx) => {
+        // --- Organic keyword accordion ---
+        function renderKeywordAccordion(results) {
+            const accordion = document.getElementById('keyword-accordion');
+            const featuresList = [
+                { key: 'google_ads', label: 'Ads' },
+                { key: 'ai_overview', label: 'AI Overview' },
+                { key: 'featured_snippet', label: 'Featured Snippet' },
+                { key: 'people_also_ask', label: 'PAA' },
+                { key: 'image_carousel', label: 'Imágenes' },
+                { key: 'video_carousel', label: 'Vídeos' },
+                { key: 'local_pack', label: 'Local Pack' },
+                { key: 'shopping_results', label: 'Shopping' },
+                { key: 'knowledge_panel', label: 'Knowledge Panel' },
+                { key: 'news', label: 'Noticias' },
+            ];
+
+            accordion.innerHTML = results.map((result, idx) => {
                 const features = result.serp_features || {};
-                const featuresList = [
-                    { key: 'google_ads', label: 'Ads' },
-                    { key: 'ai_overview', label: 'AI Overview' },
-                    { key: 'featured_snippet', label: 'Featured Snippet' },
-                    { key: 'people_also_ask', label: 'PAA' },
-                    { key: 'image_carousel', label: 'Imágenes' },
-                    { key: 'video_carousel', label: 'Vídeos' },
-                    { key: 'local_pack', label: 'Local Pack' },
-                    { key: 'shopping_results', label: 'Shopping' },
-                    { key: 'knowledge_panel', label: 'Knowledge Panel' },
-                    { key: 'news', label: 'Noticias' },
-                ];
-
-                const activeFeatures = featuresList.filter(f => features[f.key]);
                 const resultsCount = result.organic_results?.length || 0;
 
                 return `
                     <div class="keyword-card" data-idx="${idx}">
-                        <div class="keyword-card-header" onclick="toggleCard(${idx})">
+                        <div class="keyword-card-header" onclick="toggleCard('org', ${idx})">
                             <div class="keyword-header-left">
                                 <span class="keyword-title">${escapeHtml(result.keyword)}</span>
-                                ${result.tag ? `<span class="keyword-tag-badge">${escapeHtml(result.tag)}</span>` : ''}
+                                ${intentBadge(result.tag)}
                             </div>
                             <div class="keyword-header-right">
                                 <span class="results-count">${resultsCount} resultados</span>
@@ -1075,7 +633,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    `).join('') || '<p style="padding: 1rem; color: var(--text-muted);">No se encontraron resultados</p>'}
+                                    `).join('') || '<p style="padding: 1rem; color: var(--text-muted);">No se encontraron resultados orgánicos</p>'}
                                 </div>
                             `}
                         </div>
@@ -1084,9 +642,96 @@
             }).join('');
         }
 
-        function toggleCard(idx) {
-            const card = document.querySelector(`.keyword-card[data-idx="${idx}"]`);
-            card.classList.toggle('open');
+        // --- AI Overview domains table ---
+        function renderAiDomains(aiDomainAggregation) {
+            const container = document.getElementById('ai-domains-table-container');
+            const emptyState = document.getElementById('empty-state-ai-domains');
+            const tbody = document.getElementById('ai-domains-table-body');
+
+            if (aiDomainAggregation.length > 0) {
+                emptyState.style.display = 'none';
+                container.style.display = 'block';
+                tbody.innerHTML = aiDomainAggregation.map((domain, index) => `
+                    <tr>
+                        <td><span class="position-badge">${index + 1}</span></td>
+                        <td><span class="domain-name ai">${escapeHtml(domain.domain)}</span></td>
+                        <td><strong>${domain.appearances}</strong></td>
+                        <td>${domain.avg_position.toFixed(1)}</td>
+                        <td>${domain.unique_urls}</td>
+                        <td>
+                            <div class="keywords-tags">
+                                ${domain.keywords.slice(0, 4).map(kw => `<span class="keyword-tag">${escapeHtml(truncate(kw, 20))}</span>`).join('')}
+                                ${domain.keywords.length > 4 ? `<span class="keyword-tag">+${domain.keywords.length - 4}</span>` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                emptyState.style.display = 'block';
+                container.style.display = 'none';
+            }
+        }
+
+        // --- AI Overview keyword accordion ---
+        function renderAiKeywordAccordion(results) {
+            const accordion = document.getElementById('ai-keyword-accordion');
+            const emptyState = document.getElementById('empty-state-ai-keywords');
+
+            accordion.innerHTML = results.map((result, idx) => {
+                const aiResults = result.ai_overview_results || [];
+                const hasAi = result.serp_features?.ai_overview;
+
+                return `
+                    <div class="keyword-card" data-idx="${idx}">
+                        <div class="keyword-card-header" onclick="toggleCard('ai', ${idx})">
+                            <div class="keyword-header-left">
+                                <span class="keyword-title">${escapeHtml(result.keyword)}</span>
+                                ${intentBadge(result.tag)}
+                                ${hasAi ? '<span class="feature-badge active">AI Overview</span>' : '<span class="feature-badge inactive">Sin AI Overview</span>'}
+                            </div>
+                            <div class="keyword-header-right">
+                                <span class="results-count">${aiResults.length} fuentes</span>
+                                <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="keyword-card-body">
+                            ${aiResults.length > 0 ? `
+                                <div class="section-label ai-label">Fuentes citadas en AI Overview</div>
+                                <div class="organic-list">
+                                    ${aiResults.map(ai => `
+                                        <div class="organic-item">
+                                            <div class="organic-position ai-pos">${ai.position}</div>
+                                            <div class="organic-content">
+                                                <div class="organic-title">${escapeHtml(ai.title)}</div>
+                                                <div class="organic-domain ai">${escapeHtml(ai.domain)}</div>
+                                                <div class="organic-url">
+                                                    <a href="${escapeHtml(ai.url)}" target="_blank" rel="noopener">${escapeHtml(ai.url)}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : `
+                                <div class="ai-empty-note">
+                                    ${hasAi ? 'AI Overview detectado pero no se pudieron extraer las fuentes citadas.' : 'No se detectó bloque de AI Overview en esta SERP.'}
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            emptyState.style.display = 'none';
+        }
+
+        function toggleCard(type, idx) {
+            const selector = type === 'ai'
+                ? `#ai-keyword-accordion .keyword-card[data-idx="${idx}"]`
+                : `#keyword-accordion .keyword-card[data-idx="${idx}"]`;
+            const card = document.querySelector(selector);
+            if (card) card.classList.toggle('open');
         }
 
         function escapeHtml(text) {
@@ -1100,6 +745,27 @@
             if (!str) return '';
             return str.length > len ? str.substring(0, len) + '...' : str;
         }
+
+        // Info modal
+        function openInfoModal() {
+            document.getElementById('info-modal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeInfoModal() {
+            document.getElementById('info-modal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function handleModalClick(event) {
+            if (event.target === document.getElementById('info-modal')) {
+                closeInfoModal();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeInfoModal();
+        });
     </script>
 </body>
 </html>

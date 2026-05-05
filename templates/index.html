@@ -56,11 +56,11 @@
                         <label>Delay entre peticiones (segundos)</label>
                         <div class="input-row">
                             <div>
-                                <input type="number" id="delay-min" value="5" min="2" max="30">
+                                <input type="number" id="delay-min" value="15" min="2" max="60">
                                 <label class="label-hint" style="margin-top: 0.35rem;">Mínimo</label>
                             </div>
                             <div>
-                                <input type="number" id="delay-max" value="8" min="3" max="60">
+                                <input type="number" id="delay-max" value="25" min="3" max="120">
                                 <label class="label-hint" style="margin-top: 0.35rem;">Máximo</label>
                             </div>
                         </div>
@@ -332,19 +332,19 @@
                                     <td class="rec">Aceptable en sesiones cortas</td>
                                 </tr>
                                 <tr>
-                                    <td><span class="mono">5 – 8 s</span> <small style="color:var(--accent-primary)">★ defecto</small></td>
+                                    <td><span class="mono">5 – 8 s</span></td>
                                     <td>~65 segundos</td>
-                                    <td class="good">Equilibrio seguridad / velocidad</td>
+                                    <td class="rec">Aceptable en sesiones muy cortas</td>
                                 </tr>
                                 <tr>
                                     <td><span class="mono">8 – 12 s</span></td>
                                     <td>~100 segundos</td>
-                                    <td class="good">Más seguro para lotes grandes</td>
+                                    <td class="good">Seguro para sesiones cortas</td>
                                 </tr>
                                 <tr>
-                                    <td><span class="mono">12 – 20 s</span></td>
-                                    <td>~160 segundos</td>
-                                    <td class="good">Muy seguro, mínimo riesgo</td>
+                                    <td><span class="mono">15 – 25 s</span> <small style="color:var(--accent-primary)">★ defecto</small></td>
+                                    <td>~200 segundos</td>
+                                    <td class="good">Equilibrio seguridad / velocidad</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -354,7 +354,7 @@
                         <strong>Tiempo real por keyword:</strong> Al delay se le suman ~3–5 segundos de carga de página
                         y otros ~3 segundos de espera para que el bloque de AI Overview termine de renderizarse.
                         Para AIO con botones de expansión, se añaden ~2 segundos extra por grupo.
-                        Con el delay predeterminado de 5–8 s, calcula entre <strong>10–15 segundos por keyword</strong>.
+                        Con el delay predeterminado de 15–25 s, calcula entre <strong>20–35 segundos por keyword</strong>.
                     </div>
 
                     <div class="callout">

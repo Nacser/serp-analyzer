@@ -5,3 +5,6 @@ services:
     plan: free
     healthCheckPath: /
     autoDeploy: true
+    envVars:
+      - key: HEADLESS
+        value: true

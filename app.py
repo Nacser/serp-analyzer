@@ -20,8 +20,14 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
 from playwright.sync_api import sync_playwright
+from playwright_stealth import Stealth
+
+_stealth = Stealth()
 
 app = Flask(__name__)
+
+# En servidor (Docker/Render) el navegador corre sin pantalla
+HEADLESS = os.environ.get("HEADLESS", "false").lower() == "true"
 
 # Fichero donde se guardan cookies/localStorage entre sesiones
 BROWSER_STATE_FILE = "browser_state.json"
@@ -491,14 +497,29 @@ def _scrape_keyword_on_page(page, keyword):
         )
 
         page.goto(search_url, wait_until="networkidle")
-        # Espera extra para que AI Overview cargue (se inyecta via JS tras el HTML inicial)
-        page.wait_for_timeout(3000)
+        # Pausa variable: simula tiempo de lectura inicial de resultados
+        page.wait_for_timeout(random.randint(2500, 4500))
 
-        # Scroll suave para activar lazy content
-        page.evaluate("window.scrollBy(0, 600)")
-        page.wait_for_timeout(800)
-        page.evaluate("window.scrollBy(0, -200)")
-        page.wait_for_timeout(500)
+        # Movimientos de ratón aleatorios antes de scrollear
+        for _ in range(random.randint(2, 4)):
+            page.mouse.move(
+                random.randint(30, 380),
+                random.randint(80, 700),
+            )
+            page.wait_for_timeout(random.randint(150, 500))
+
+        # Scroll progresivo multi-paso (simula lectura de resultados)
+        for _ in range(random.randint(3, 6)):
+            page.evaluate(f"window.scrollBy(0, {random.randint(120, 380)})")
+            page.wait_for_timeout(random.randint(300, 900))
+
+        # Pausa de lectura en mitad de la página
+        page.wait_for_timeout(random.randint(600, 1500))
+
+        # Scroll de vuelta parcial ocasional (simula releer)
+        if random.random() > 0.3:
+            page.evaluate(f"window.scrollBy(0, -{random.randint(100, 300)})")
+            page.wait_for_timeout(random.randint(300, 700))
 
         # Expandir citas del AI Overview antes de leer el HTML
         n_expanded = _expand_ai_citations(page)
@@ -506,7 +527,7 @@ def _scrape_keyword_on_page(page, keyword):
             # Esperar a que los comentarios TgQPHd adicionales aparezcan en el DOM
             try:
                 page.wait_for_function(
-                    """() => {
+                    r"""() => {
                         const html = document.documentElement.innerHTML;
                         const matches = html.match(/TgQPHd\|/g);
                         return matches && matches.length > 1;
@@ -523,8 +544,21 @@ def _scrape_keyword_on_page(page, keyword):
             f.write(html_content)
 
         if "captcha" in html_content.lower() or "unusual traffic" in html_content.lower():
-            result["error"] = "CAPTCHA detectado."
-            return result
+            if HEADLESS:
+                result["error"] = "CAPTCHA detectado. La IP del servidor está bloqueada temporalmente."
+                return result
+            print("[CAPTCHA] Google mostró un CAPTCHA. Resuélvelo en el navegador (tienes 2 minutos)...")
+            captcha_resolved = False
+            for _ in range(60):
+                page.wait_for_timeout(2000)
+                html_content = page.content()
+                if "captcha" not in html_content.lower() and "unusual traffic" not in html_content.lower():
+                    print("[INFO] CAPTCHA resuelto, extrayendo resultados...")
+                    captcha_resolved = True
+                    break
+            if not captcha_resolved:
+                result["error"] = "CAPTCHA no resuelto en el tiempo límite (2 min)."
+                return result
 
         soup = BeautifulSoup(html_content, "html.parser")
         result["serp_features"] = detect_serp_features(soup)
@@ -553,16 +587,19 @@ def scrape_all_keywords(keywords_list, delay_min=4, delay_max=7):
     all_results = []
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(
-            headless=False,
-            args=[
-                "--disable-blink-features=AutomationControlled",
-                "--disable-dev-shm-usage",
-                "--no-sandbox",
-                "--disable-infobars",
-                "--disable-notifications",
-            ],
-        )
+        _launch_args = [
+            "--disable-blink-features=AutomationControlled",
+            "--disable-infobars",
+            "--disable-notifications",
+            "--disable-dev-shm-usage",
+            "--no-sandbox",
+        ]
+        try:
+            browser = p.chromium.launch(channel="chrome", headless=HEADLESS, args=_launch_args)
+            print("[INFO] Usando Chrome instalado en el sistema")
+        except Exception:
+            browser = p.chromium.launch(headless=HEADLESS, args=_launch_args)
+            print("[INFO] Chrome no encontrado, usando Chromium de Playwright")
 
         # Cargar estado guardado (cookies, localStorage) si existe
         ctx_kwargs = dict(
@@ -586,12 +623,17 @@ def scrape_all_keywords(keywords_list, delay_min=4, delay_max=7):
         context.add_init_script(_STEALTH_SCRIPT)
 
         page = context.new_page()
+        _stealth.apply_stealth_sync(page)
         page.set_default_timeout(30000)
 
         # Warm-up: visitar Google home, aceptar cookies y guardar estado
         print("[INFO] Iniciando sesión en Google España...")
         page.goto(f"https://www.{COUNTRY['domain']}", wait_until="networkidle")
         _handle_cookie_consent(page)
+        # Movimiento de ratón aleatorio en la home para parecer más humano
+        for _ in range(random.randint(2, 3)):
+            page.mouse.move(random.randint(50, 360), random.randint(100, 500))
+            page.wait_for_timeout(random.randint(200, 600))
         page.wait_for_timeout(random.randint(2000, 3500))
 
         # Persistir cookies/localStorage para la próxima ejecución
@@ -704,8 +746,8 @@ def analyze():
         return jsonify({"error": "No se proporcionaron keywords"}), 400
 
     keywords_input = data.get("keywords", "")
-    delay_min = data.get("delay_min", 4)
-    delay_max = data.get("delay_max", 7)
+    delay_min = data.get("delay_min", 15)
+    delay_max = data.get("delay_max", 25)
 
     keywords_list = parse_keywords_input(keywords_input)
 

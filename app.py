@@ -640,14 +640,23 @@ def scrape_all_keywords(keywords_list, delay_min=4, delay_max=7):
         context.storage_state(path=BROWSER_STATE_FILE)
         print("[INFO] Estado de sesión guardado")
 
+        BATCH_SIZE = 10        # pausa larga cada N keywords
+        BATCH_PAUSE = 150      # segundos de pausa entre bloques (2.5 min)
+
         for i, kw_data in enumerate(keywords_list):
             keyword = kw_data["keyword"]
             print(f"\n[INFO] Keyword {i + 1}/{len(keywords_list)}: '{keyword}'")
 
             if i > 0:
-                delay = random.uniform(delay_min, delay_max)
-                print(f"[INFO] Esperando {delay:.1f}s...")
-                time.sleep(delay)
+                # Pausa larga cada BATCH_SIZE keywords para no quemar la IP
+                if i % BATCH_SIZE == 0:
+                    pause = BATCH_PAUSE + random.randint(-20, 20)
+                    print(f"[INFO] Pausa anti-bloqueo tras {BATCH_SIZE} keywords ({pause}s)...")
+                    time.sleep(pause)
+                else:
+                    delay = random.uniform(delay_min, delay_max)
+                    print(f"[INFO] Esperando {delay:.1f}s...")
+                    time.sleep(delay)
 
             result = _scrape_keyword_on_page(page, keyword)
             all_results.append(result)

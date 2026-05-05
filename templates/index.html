@@ -434,8 +434,19 @@
             const keywords = keywordsInput.value.trim();
             if (!keywords) { alert('Introduce al menos una keyword'); return; }
 
-            const delayMin = parseInt(delayMinInput.value) || 5;
-            const delayMax = parseInt(delayMaxInput.value) || 8;
+            const delayMin = parseInt(delayMinInput.value) || 15;
+            const delayMax = parseInt(delayMaxInput.value) || 25;
+
+            const keywordCount = keywords.split('\n').filter(k => k.trim()).length;
+            if (keywordCount > 10) {
+                const ok = confirm(
+                    `⚠️ Batch grande: ${keywordCount} keywords.\n\n` +
+                    `La herramienta hará una pausa automática de ~2.5 min cada 10 keywords para evitar bloqueos de Google.\n\n` +
+                    `Tiempo estimado total: ~${Math.round(keywordCount * ((delayMin + delayMax) / 2 + 8) / 60 + Math.floor((keywordCount - 1) / 10) * 2.5)} min.\n\n` +
+                    `¿Continuar?`
+                );
+                if (!ok) return;
+            }
 
             analyzeBtn.disabled = true;
             analyzeBtn.innerHTML = '<div class="spinner"></div> Analizando...';
@@ -444,7 +455,6 @@
             progressFill.style.width = '0%';
             progressText.textContent = 'Iniciando análisis...';
 
-            const keywordCount = keywords.split('\n').filter(k => k.trim()).length;
             let progress = 0;
             const progressInterval = setInterval(() => {
                 progress += 100 / (keywordCount * ((delayMin + delayMax) / 2));
